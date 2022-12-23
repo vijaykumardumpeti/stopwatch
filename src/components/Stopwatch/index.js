@@ -1,4 +1,3 @@
-// Write your code here
 import {Component} from 'react'
 
 import './index.css'
@@ -9,19 +8,14 @@ export default class Stopwatch extends Component {
     time: 0,
   }
 
-  onStartTimer = () => {
-    this.setState({
-      isStart: true,
-    })
-
-    this.timerID = setInterval(this.startTimeFunction, 1000)
-  }
-
-  onStopTimer = () => {
-    this.setState({
-      isStart: true,
-    })
-    clearInterval(this.timerID)
+  componentDidMount = () => {
+    const {isStart} = this.state
+    this.setState(prevState => ({
+      isStart: !prevState.isStart,
+    }))
+    if (isStart === true) {
+      this.timerID = setInterval(this.startTimeFunction, 1000)
+    }
   }
 
   componentWillUnmount = () => {
@@ -34,13 +28,16 @@ export default class Stopwatch extends Component {
     }))
   }
 
-  onResetTimer = () => {
-    this.setState({time: 0, isStart: false})
-    clearInterval(this.timeInterval)
+  onReset = () => {
+    clearInterval(this.timerID)
+
+    this.setState({
+      time: 0,
+    })
   }
 
   render() {
-    const {time, isStart} = this.state
+    const {time} = this.state
 
     const timers = time > 9 ? time : `0${time}`
 
@@ -59,10 +56,9 @@ export default class Stopwatch extends Component {
           <div className="buttons-container">
             <div>
               <button
-                onClick={this.onStartTimer}
+                onClick={this.componentDidMount}
                 className={`button-style ${'button-1'}`}
                 type="button"
-                disabled={isStart}
               >
                 Start
               </button>
@@ -70,7 +66,7 @@ export default class Stopwatch extends Component {
 
             <div>
               <button
-                onClick={this.onStopTimer}
+                onClick={this.componentWillUnmount}
                 className={`button-style ${'button-2'}`}
                 type="button"
               >
@@ -80,7 +76,7 @@ export default class Stopwatch extends Component {
 
             <div>
               <button
-                onClick={this.onResetTimer}
+                onClick={this.onReset}
                 className={`button-style ${'button-3'}`}
                 type="button"
               >
@@ -93,3 +89,4 @@ export default class Stopwatch extends Component {
     )
   }
 }
+
