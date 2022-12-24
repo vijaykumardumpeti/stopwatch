@@ -4,35 +4,47 @@ import './index.css'
 
 export default class Stopwatch extends Component {
   state = {
-    isStart: false,
+    isStart: true,
     time: 0,
+  }
+
+  startButtonClicked = () => {
+    this.setState(prevState => ({
+      isStart: !prevState.isStart,
+    }))
+    this.componentDidMount()
   }
 
   componentDidMount = () => {
     const {isStart} = this.state
-    this.setState(prevState => ({
-      isStart: !prevState.isStart,
-    }))
-    if (isStart === true) {
-      this.timerID = setInterval(this.startTimeFunction, 1000)
+    if (isStart === false) {
+      this.elapsingTime()
+    } else if (isStart === true) {
+      this.componentWillUnmount()
     }
   }
 
   componentWillUnmount = () => {
-    clearInterval(this.timerID)
+    clearInterval(this.intervalId)
+    this.setState({
+      isStart: false,
+    })
   }
 
-  startTimeFunction = () => {
+  elapsingTime = () => {
+    this.intervalId = setInterval(this.elapseTime, 1000)
+  }
+
+  elapseTime = () => {
     this.setState(prevState => ({
       time: prevState.time + 1,
     }))
   }
 
   onReset = () => {
-    clearInterval(this.timerID)
-
     this.setState({
       time: 0,
+      isStart: false,
     })
   }
 
@@ -56,7 +68,7 @@ export default class Stopwatch extends Component {
           <div className="buttons-container">
             <div>
               <button
-                onClick={this.componentDidMount}
+                onClick={this.startButtonClicked}
                 className={`button-style ${'button-1'}`}
                 type="button"
               >
