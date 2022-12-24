@@ -5,7 +5,7 @@ import './index.css'
 export default class Stopwatch extends Component {
   state = {
     isStart: true,
-    time: 0,
+    seconds: 0,
   }
 
   startButtonClicked = () => {
@@ -37,21 +37,35 @@ export default class Stopwatch extends Component {
 
   elapseTime = () => {
     this.setState(prevState => ({
-      time: prevState.time + 1,
+      seconds: prevState.time + 1,
     }))
   }
 
   onReset = () => {
     this.setState({
-      time: 0,
+      seconds: 0,
       isStart: false,
     })
   }
 
-  render() {
-    const {time} = this.state
+  timeInSeconds = () => {
+    const {seconds} = this.state
+    const secs = Math.floor(seconds % 60)
 
-    const timers = time > 9 ? time : `0${time}`
+    const timeInSeconds = secs > 9 ? secs : `0${secs}`
+    return timeInSeconds
+  }
+
+  timeInMinutes = () => {
+    const {seconds} = this.state
+
+    const minutes = Math.floor(seconds / 60)
+    const timeInMinutes = minutes > 9 ? minutes : `0${minutes}`
+    return timeInMinutes
+  }
+
+  render() {
+    const time = `${this.timeInMinutes()}:${this.timeInSeconds()}`
 
     return (
       <div className="bg-container">
@@ -64,7 +78,7 @@ export default class Stopwatch extends Component {
             />
             <p>Timer</p>
           </div>
-          <h1>00:{timers}</h1>
+          <h1>{time}</h1>
           <div className="buttons-container">
             <div>
               <button
@@ -101,4 +115,5 @@ export default class Stopwatch extends Component {
     )
   }
 }
+
 
