@@ -37,7 +37,7 @@ export default class Stopwatch extends Component {
 
   elapseTime = () => {
     this.setState(prevState => ({
-      seconds: prevState.time + 1,
+      seconds: prevState.seconds + 1,
     }))
   }
 
@@ -115,5 +115,6 @@ export default class Stopwatch extends Component {
     )
   }
 }
+
 
 
